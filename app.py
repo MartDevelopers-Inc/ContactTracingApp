@@ -223,7 +223,7 @@ class ArticleForm(Form):
     phone = StringField('Phone Number',[validators.length(min=1,max=15)])
     symptoms=TextAreaField('Symptoms',[validators.length(min=30)])
     symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=20, max=200)])
-    closeness = StringField('Have You Been Close To Someonw With Symptoms',[validators.length(min=20, max=200)])
+    closeness = TextAreaField('Have You Been Close To Someone With Symptoms',[validators.length(min=20, max=200)])
     other_medical_issues = StringField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=20, max=200)])
 
 # Add question
