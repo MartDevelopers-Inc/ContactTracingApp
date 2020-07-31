@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="container  col-md-12">
+        <div class="card text-center">
+            <div class="card-header">
+                <h1>{{ question.title}}</h1>
+                <small>Written by {{question.author}} on {{question.create_date}}</small>
+                <hr>
+                <div class="card-text">
+                    {{question.body | safe}}
+                </div>
+            </div>
+        </div>        
+    </div>
+{% endblock %}

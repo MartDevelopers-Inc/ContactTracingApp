@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h1>Answers</h1>
+  <ul class="list-group">
+    {% for answer in answers %}
+      <li class="list-group-item"><a href="answer/{{answer.id}}">{{answer.title}}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

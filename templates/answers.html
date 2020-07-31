@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="container">
+        <div class="card">
+            <div class="card-header">
+                    <h1>Answers</h1>
+            </div>
+            <div class="card-body">
+                    <ul class="list-group">
+                            {% for answer in answers %}
+                              <li class="list-group-item"><a href="answer/{{answer.id}}">{{answer.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+            </div>
+        </div>
+</div>
+
+  
+
+  
+
+{% endblock %}
+
+
