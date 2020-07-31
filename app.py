@@ -221,12 +221,16 @@ class ArticleForm(Form):
     name= StringField('Full Name', [validators.Length(min=1, max=200)])
     age = StringField('Age', [validators.length(min=1, max=200)])
     phone = StringField('Phone Number',[validators.length(min=1,max=15)])
+    family_members = TextAreaField('How Many Are You In Your Family Including You', [validators.length(min=20)])
     symptoms=TextAreaField('Symptoms',[validators.length(min=30)])
-    symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=20, max=200)])
-    closeness = TextAreaField('Have You Been Close To Someone With Symptoms',[validators.length(min=20, max=200)])
-    other_medical_issues = StringField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=20, max=200)])
+    symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=20)])
+    closeness = TextAreaField('Have You Been Close To Someone With Symptoms',[validators.length(min=20)])
+    other_medical_issues = TextAreaField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=20)])
+    any_recent_travel = TextAreaField('Did You Travel Any Recently And Where', [validators.length(min=20)])
+    same_symptoms = TextAreaField('Is Anyone In The Home Experiencing Any Of The Symptoms As You', [validators.length(min=20)])
 
-# Add question
+
+# Add Questionare
 @app.route('/take_survey', methods=['GET', 'POST'])
 @is_logged_in
 def add_question():
@@ -239,6 +243,9 @@ def add_question():
         symptops_started = form.symptops_started.data
         closeness = form.closeness.data
         other_medical_issues = form.other_medical_issues.data
+        family_members = form.family_members.data
+        any_recent_travel = form.any_recent_travel.data
+        same_symptoms = form.same_symptoms.data
 
         # Create Cursor
         cur = mysql.connection.cursor()
@@ -252,7 +259,7 @@ def add_question():
         #Close connection
         cur.close()
 
-        flash('Question Created', 'success')
+        flash('Response Submitted', 'success')
 
         return redirect(url_for('dashboard'))
 
