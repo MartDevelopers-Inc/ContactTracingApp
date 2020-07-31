@@ -211,24 +211,34 @@ def dashboard():
         return render_template('dashboard.html', questions=questions)      
         return render_template('dashboard.html',  answers=answers)
     else:
-        msg = 'No Questions Found'
+        msg = 'No Contact Tracing Responses Found'
         return render_template('dashboard.html', msg=msg)
     # Close connection
     cur.close()
 
-# Question Form Class
+# Questionaire form
 class ArticleForm(Form):
-    title = StringField('Title', [validators.Length(min=1, max=200)])
-    body = TextAreaField('Body', [validators.Length(min=30)])
+    name= StringField('Full Name', [validators.Length(min=1, max=200)])
+    age = StringField('Age', [validators.length(min=1, max=200)])
+    phone = StringField('Phone Number',[validators.length(min=1,max=15)])
+    symptoms=TextAreaField('Symptoms',[validators.length(min=30)])
+    symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=20, max=200)])
+    closeness = StringField('Have You Been Close To Someonw With Symptoms',[validators.length(min=20, max=200)])
+    other_medical_issues = StringField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=20, max=200)])
 
 # Add question
-@app.route('/add_question', methods=['GET', 'POST'])
+@app.route('/take_survey', methods=['GET', 'POST'])
 @is_logged_in
 def add_question():
     form = ArticleForm(request.form)
     if request.method == 'POST' and form.validate():
-        title = form.title.data
-        body = form.body.data
+        name = form.name.data
+        age = form.age.data
+        phone = form.phone.data
+        symptoms = form.symptoms.data
+        symptops_started = form.symptops_started.data
+        closeness = form.closeness.data
+        other_medical_issues = form.other_medical_issues.data
 
         # Create Cursor
         cur = mysql.connection.cursor()
@@ -246,7 +256,7 @@ def add_question():
 
         return redirect(url_for('dashboard'))
 
-    return render_template('add_question.html', form=form)
+    return render_template('take_survey.html', form=form)
 
 
 # Add Answer
