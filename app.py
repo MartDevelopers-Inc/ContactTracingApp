@@ -231,67 +231,6 @@ def add_question():
     return render_template('take_survey.html', form=form)
 
 
-
-# Edit Article
-@app.route('/edit_question/<string:id>', methods=['GET', 'POST'])
-@is_logged_in
-def edit_question(id):
-    # Create cursor
-    cur = mysql.connection.cursor()
-
-    # Get article by id
-    result = cur.execute("SELECT * FROM questions WHERE id = %s", [id])
-
-    question = cur.fetchone()
-    cur.close()
-    # Get form
-    form = ArticleForm(request.form)
-
-    # Populate article form fields
-    form.title.data = question['title']
-    form.body.data = question['body']
-
-    if request.method == 'POST' and form.validate():
-        title = request.form['title']
-        body = request.form['body']
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-        app.logger.info(title)
-        # Execute
-        cur.execute ("UPDATE questions SET title=%s, body=%s WHERE id=%s",(title, body, id))
-        # Commit to DB
-        mysql.connection.commit()
-
-        #Close connection
-        cur.close()
-
-        flash('Question Updated', 'success')
-
-        return redirect(url_for('dashboard'))
-
-    return render_template('edit_question.html', form=form)
-
-# Delete Response
-@app.route('/delete_question/<string:id>', methods=['POST'])
-@is_logged_in
-def delete_question(id):
-    # Create cursor
-    cur = mysql.connection.cursor()
-
-    # Execute
-    cur.execute("DELETE FROM questions WHERE id = %s", [id])
-
-    # Commit to DB
-    mysql.connection.commit()
-
-    #Close connection
-    cur.close()
-
-    flash('Question Deleted', 'success')
-
-    return redirect(url_for('dashboard'))
-
   
 if __name__ == '__main__':
     app.secret_key='secret123'
