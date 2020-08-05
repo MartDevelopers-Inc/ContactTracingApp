@@ -190,7 +190,7 @@ class ArticleForm(Form):
     symptoms=TextAreaField('Symptoms',[validators.length(min=5)])
     symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=1)])
     closeness = TextAreaField('Have You Been Close To Someone With Symptoms',[validators.length(min=1)])
-    other_medical_issues = TextAreaField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=2)])
+    other_medical_issues = TextAreaField('Do You Have Any Chronic Medical Condition - Name Them', [validators.length(min=2)])
     any_recent_travel = TextAreaField('Did You Travel Any Recently And Where', [validators.length(min=1)])
     same_symptoms = TextAreaField('Is Anyone In The Home Experiencing Any Of The Symptoms As You', [validators.length(min=2)])
 

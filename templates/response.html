@@ -11,32 +11,63 @@
                     <table class="table table-bordered">
                         <thead>
                           <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Phone Number</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
+                            <td>{{ contact_tracing.name}}</td>
+                            <td>{{ contact_tracing.age}} Years Old</td>
+                            <td>{{ contact_tracing.phone}}</td>
                           </tr>
                         </tbody>
-                      </table>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">Symptoms</th>
+                            <th scope="col">When Did You Start Having These Symptoms</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{{ contact_tracing.symptoms}}</td>
+                            <td>{{ contact_tracing.symptops_started}}</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">Have You Been Close To Someone With Symptoms</th>
+                            <th scope="col">Any Chronic Medical Condition - Name Them</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{{ contact_tracing.closeness}}</td>
+                            <td>{{ contact_tracing.other_medical_issues}}</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">How Many Are You In Your Family Including You</th>
+                            <th scope="col">Is Anyone In The Home Experiencing Any Of The Symptoms As You</th>
+                            <th scope="col">Did You Travel Any Recently And Where</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{{ contact_tracing.family_members}}</td>
+                            <td>{{ contact_tracing.any_recent_travel}}</td>
+                            <td>{{ contact_tracing.same_symptoms}}</td>
+                          </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>        
