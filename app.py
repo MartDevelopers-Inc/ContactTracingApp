@@ -272,7 +272,7 @@ def edit_question(id):
 
     return render_template('edit_question.html', form=form)
 
-# Delete Question
+# Delete Response
 @app.route('/delete_question/<string:id>', methods=['POST'])
 @is_logged_in
 def delete_question(id):
