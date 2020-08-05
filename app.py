@@ -50,18 +50,18 @@ def contact_tracings():
 
 
 
-#Single Question
-@app.route('/question/<string:id>/')
-def question(id):
+#Single contact tracing Response
+@app.route('/contact_tracings/<string:id>/')
+def contact_tracing(id):
     # Create cursor
     cur = mysql.connection.cursor()
 
     # Get Question
-    result = cur.execute("SELECT * FROM questions WHERE id = %s", [id])
+    result = cur.execute("SELECT * FROM questionaires WHERE id = %s", [id])
 
-    question = cur.fetchone()
+    contact_tracing = cur.fetchone()
 
-    return render_template('question.html', question=question)
+    return render_template('response.html', contact_tracing=contact_tracing)
 
 
 
