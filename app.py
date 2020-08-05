@@ -29,43 +29,25 @@ def about():
     return render_template('about.html')
 
 
-# Questions
-@app.route('/questions')
-def questions():
+# ContactTracing
+@app.route('/contact_tracings')
+def contact_tracings():
     # Create cursor
     cur = mysql.connection.cursor()
 
-    # Get Questions
-    result = cur.execute("SELECT * FROM questions")
+    # Get Filled Questionaires
+    result = cur.execute("SELECT * FROM questionaires")
 
-    questions = cur.fetchall()
+    contact_tracings = cur.fetchall()
 
     if result > 0:
-        return render_template('questions.html', questions=questions)
+        return render_template('responses.html', contact_tracings=contact_tracings)
     else:
-        msg = 'No Asked Questions Found'
-        return render_template('questions.html', msg=msg)
+        msg = 'No Responses Captured'
+        return render_template('responses.html', msg=msg)
     # Close connection
     cur.close()
 
-#Answers
-@app.route('/answers')
-def answers():
-    #Create Cursor
-    cur = mysql.connection.cursor()
-    #Get answers
-    result = cur.execute("SELECT * FROM answers")
-    answers = cur.fetchall()
-    #condition if ya gat no answers to the questions.
-
-    if result>0:
-       return render_template('answers.html', answers=answers)
-    else:
-        msg='No Answered Questions Found'
-        return render_template('answers.html',msg=msg)
-
-#KILL Conncetion
-    cur.close()
 
 
 #Single Question
@@ -81,15 +63,6 @@ def question(id):
 
     return render_template('question.html', question=question)
 
-#single answer
-@app.route('/answer/<string:id>/')
-def answer(id):
-    #Create Cursor
-    cur = mysql.connection.cursor()
-    #Get Answer
-    result = cur.execute("SELECT * FROM answers WHERE id = %s", [id])
-    answer = cur.fetchone()
-    return render_template('answer.html', answer=answer)
 
 
 # Register Form Class
@@ -196,20 +169,12 @@ def dashboard():
     # Create cursor
     cur = mysql.connection.cursor()
 
-    # Get questions
-    #result = cur.execute("SELECT * FROM articles")
-    # Show questions only from the user logged in 
-    result = cur.execute("SELECT * FROM questions WHERE author = %s", [session['username']])
-
-    questions = cur.fetchall()
-
-    result = cur.execute("SELECT * FROM answers WHERE author = %s", [session['username']])
-
-    answers = cur.fetchall()
-
+    # Get questionaires
+    # Show recently tracing inforation of logged in user
+    result = cur.execute("SELECT * FROM questionaires WHERE name = %s", [session['username']])
+    Responses = cur.fetchall()
     if result > 0:
-        return render_template('dashboard.html', questions=questions)      
-        return render_template('dashboard.html',  answers=answers)
+        return render_template('dashboard.html', Responses=Responses)      
     else:
         msg = 'No Contact Tracing Responses Found'
         return render_template('dashboard.html', msg=msg)
@@ -222,10 +187,10 @@ class ArticleForm(Form):
     age = StringField('Age', [validators.length(min=1, max=200)])
     phone = StringField('Phone Number',[validators.length(min=1,max=15)])
     family_members = TextAreaField('How Many Are You In Your Family Including You', [validators.length(min=1)])
-    symptoms=TextAreaField('Symptoms',[validators.length(min=30)])
+    symptoms=TextAreaField('Symptoms',[validators.length(min=5)])
     symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=1)])
     closeness = TextAreaField('Have You Been Close To Someone With Symptoms',[validators.length(min=1)])
-    other_medical_issues = TextAreaField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=20)])
+    other_medical_issues = TextAreaField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=2)])
     any_recent_travel = TextAreaField('Did You Travel Any Recently And Where', [validators.length(min=1)])
     same_symptoms = TextAreaField('Is Anyone In The Home Experiencing Any Of The Symptoms As You', [validators.length(min=2)])
 
@@ -251,7 +216,7 @@ def add_question():
         cur = mysql.connection.cursor()
 
         # Execute
-        cur.execute("INSERT INTO questionaires(name, age, phone, symptoms, symptops_started, closeness, other_medical_issues, family_members, any_recent_travel, same_symptoms) VALUES(%s, %s, %s,%s, %s, %s, %s, %s, %s, %s)", (name, age, phone, symptoms, symptops_started, closeness, other_medical_issues, family_members, any_recent_travel, same_symptoms))
+        cur.execute("INSERT INTO questionaires(name, age, phone, symptoms, symptops_started, closeness, other_medical_issues, family_members, any_recent_travel, same_symptoms) VALUES(%s, %s, %s,%s, %s, %s, %s, %s, %s, %s)", (session['username'], age, phone, symptoms, symptops_started, closeness, other_medical_issues, family_members, any_recent_travel, same_symptoms))
 
         # Commit to DB
         mysql.connection.commit()
@@ -265,33 +230,6 @@ def add_question():
 
     return render_template('take_survey.html', form=form)
 
-
-# Add Answer
-@app.route('/add_answer', methods=['GET', 'POST'])
-@is_logged_in
-def add_answer():
-    form = ArticleForm(request.form)
-    if request.method == 'POST' and form.validate():
-        title = form.title.data
-        body = form.body.data
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Execute
-        cur.execute("INSERT INTO answers(title, body, author) VALUES(%s, %s, %s)",(title, body, session['username']))
-
-        # Commit to DB
-        mysql.connection.commit()
-
-        #Close connection
-        cur.close()
-
-        flash('Answer  Created', 'success')
-
-        return redirect(url_for('dashboard'))
-
-    return render_template('add_answer.html', form=form)
 
 
 # Edit Article
@@ -333,46 +271,6 @@ def edit_question(id):
         return redirect(url_for('dashboard'))
 
     return render_template('edit_question.html', form=form)
-
-#Edit Answer
-@app.route('/edit_answer/<string:id>', methods=['GET', 'POST'])
-@is_logged_in
-def edit_answer(id):
-    # Create cursor
-    cur = mysql.connection.cursor()
-
-    # Get question by id
-    result = cur.execute("SELECT * FROM answers WHERE id = %s", [id])
-
-    question= cur.fetchone()
-    cur.close()
-    # Get form
-    form = ArticleForm(request.form)
-
-    # Populate article form fields
-    form.title.data = question['title']
-    form.body.data = question['body']
-
-    if request.method == 'POST' and form.validate():
-        title = request.form['title']
-        body = request.form['body']
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-        app.logger.info(title)
-        # Execute
-        cur.execute ("UPDATE answers SET title=%s, body=%s WHERE id=%s",(title, body, id))
-        # Commit to DB
-        mysql.connection.commit()
-
-        #Close connection
-        cur.close()
-
-        flash('Answer Updated', 'success')
-
-        return redirect(url_for('dashboard'))
-
-    return render_template('edit_answer.html', form=form)
 
 # Delete Question
 @app.route('/delete_question/<string:id>', methods=['POST'])

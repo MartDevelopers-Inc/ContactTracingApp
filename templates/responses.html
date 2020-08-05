@@ -4,12 +4,12 @@
 <div class="container">
         <div class="card">
             <div class="card-header">
-                    <h1>Questions</h1>
+                    <h1>Responses</h1>
             </div>
             <div class="card-body">
                     <ul class="list-group">
-                        {% for question in questions %}
-                          <li class="list-group-item"><a href="question/{{question.id}}">{{question.title}}</a></li>
+                        {% for contact_tracings in contact_tracings %}
+                          <li class="list-group-item"><a href="contact_tracings/{{contact_tracings.id}}">{{contact_tracings.name }} {{contact_tracings.phone }}</a></li>
                         {% endfor %}
                     </ul>
             </div>
