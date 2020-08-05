@@ -221,13 +221,13 @@ class ArticleForm(Form):
     name= StringField('Full Name', [validators.Length(min=1, max=200)])
     age = StringField('Age', [validators.length(min=1, max=200)])
     phone = StringField('Phone Number',[validators.length(min=1,max=15)])
-    family_members = TextAreaField('How Many Are You In Your Family Including You', [validators.length(min=20)])
+    family_members = TextAreaField('How Many Are You In Your Family Including You', [validators.length(min=1)])
     symptoms=TextAreaField('Symptoms',[validators.length(min=30)])
-    symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=20)])
-    closeness = TextAreaField('Have You Been Close To Someone With Symptoms',[validators.length(min=20)])
+    symptops_started = TextAreaField('When Did You Start Having These Symptoms', [validators.Length(min=1)])
+    closeness = TextAreaField('Have You Been Close To Someone With Symptoms',[validators.length(min=1)])
     other_medical_issues = TextAreaField('Do You Have Any Medical Chronic Medical Condition - Name Them', [validators.length(min=20)])
-    any_recent_travel = TextAreaField('Did You Travel Any Recently And Where', [validators.length(min=20)])
-    same_symptoms = TextAreaField('Is Anyone In The Home Experiencing Any Of The Symptoms As You', [validators.length(min=20)])
+    any_recent_travel = TextAreaField('Did You Travel Any Recently And Where', [validators.length(min=1)])
+    same_symptoms = TextAreaField('Is Anyone In The Home Experiencing Any Of The Symptoms As You', [validators.length(min=2)])
 
 
 # Add Questionare
@@ -251,7 +251,7 @@ def add_question():
         cur = mysql.connection.cursor()
 
         # Execute
-        cur.execute("INSERT INTO questions(title, body, author) VALUES(%s, %s, %s)",(title, body, session['username']))
+        cur.execute("INSERT INTO questionaires(name, age, phone, symptoms, symptops_started, closeness, other_medical_issues, family_members, any_recent_travel, same_symptoms) VALUES(%s, %s, %s,%s, %s, %s, %s, %s, %s, %s)", (name, age, phone, symptoms, symptops_started, closeness, other_medical_issues, family_members, any_recent_travel, same_symptoms))
 
         # Commit to DB
         mysql.connection.commit()
